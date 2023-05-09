@@ -4,6 +4,7 @@ use App\Http\Controllers\api\v1\AuthApi;
 use App\Http\Controllers\api\v1\master\KabupatenKotaApi;
 use App\Http\Controllers\api\v1\master\KecamatanApi;
 use App\Http\Controllers\api\v1\master\KelurahanApi;
+use App\Http\Controllers\api\v1\master\ProvinsiApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,12 @@ Route::prefix('v1')->group(function(){
         // KABUPATEN KOTA API
         Route::prefix('kabkot')
             ->controller(KabupatenKotaApi::class)->group(function(){
+                Route::get('/', 'index');
+        });
+        
+        // KABUPATEN KOTA API
+        Route::prefix('provinsi')
+            ->controller(ProvinsiApi::class)->group(function(){
                 Route::get('/', 'index');
         });
         
