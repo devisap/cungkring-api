@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\api\v1\AuthApi;
+use App\Http\Controllers\api\v1\master\KabupatenKotaApi;
+use App\Http\Controllers\api\v1\master\KecamatanApi;
+use App\Http\Controllers\api\v1\master\KelurahanApi;
+use App\Http\Controllers\api\v1\master\ProvinsiApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +19,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function(){
+    Route::get('tes', function(){
+        return 'berhasil';
+    });
+    // AUTH API
+    Route::controller(AuthApi::class)->group(function(){
+        Route::post('login', 'login');
+    });
+
+    Route::middleware(['checkAuthApi'])->group(function(){
+        // KELURAHAN API
+        Route::prefix('kelurahan')
+            ->controller(KelurahanApi::class)->group(function(){
+                Route::get('/', 'index');
+        });
+        
+        // KECAMATAN API
+        Route::prefix('kecamatan')
+            ->controller(KecamatanApi::class)->group(function(){
+                Route::get('/', 'index');
+        });
+        
+        // KABUPATEN KOTA API
+        Route::prefix('kabkot')
+            ->controller(KabupatenKotaApi::class)->group(function(){
+                Route::get('/', 'index');
+        });
+        
+        // KABUPATEN KOTA API
+        Route::prefix('provinsi')
+            ->controller(ProvinsiApi::class)->group(function(){
+                Route::get('/', 'index');
+        });
+        
+    });
 });
