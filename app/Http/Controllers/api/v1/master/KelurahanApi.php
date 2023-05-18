@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\master\Kelurahan;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KelurahanApi extends Controller
 {
@@ -28,6 +29,15 @@ class KelurahanApi extends Controller
             }else{
                 $kelurahans = Kelurahan::where('f_active', 1)
                     ->select('id', 'kecamatan_id', 'name');
+
+                if($req->search){
+                    $search = strtolower($req->search);
+                    $kelurahans->where(function($query) use ($search){
+                        $query->where(DB::raw('LOWER(name)'), 'LIKE', '%'.$search.'%');
+                    });
+                }
+                                        
+                if($req->kecamatanId) $kelurahans->where('kecamatan_id', $req->kecamatanId);
                 if($req->limit) $kelurahans->limit($req->limit);
 
                 return response([
