@@ -14,7 +14,7 @@ class AuthApi extends Controller
     public function login(Request $req){
         try {
             $validator = Validator::make($req->all(), [
-                'email'     => 'required|email:rfc,dns',
+                'email'     => 'required',
                 'password'  => 'required' 
             ], [
                 'required'  => 'Paramater :attribute required',
