@@ -50,7 +50,7 @@ class AuthApi extends Controller
             $user = $user->toArray();
             unset($user['password']);
     
-            $jwt = JWT::encode($user, env('JWT_SECRET_KEY2'), env("JWT_ALGO2"));
+            $jwt = JWT::encode($user, env('JWT_SECRET_KEY'), env("JWT_ALGO"));
             return response([
                 'status_code'    => 200,
                 'status_message' => 'Login successfuly',
