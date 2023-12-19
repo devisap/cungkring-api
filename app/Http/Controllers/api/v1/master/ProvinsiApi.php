@@ -39,7 +39,7 @@ class ProvinsiApi extends Controller
         } catch (Exception $err) {
             return response([
                 'status_code'    => 500,
-                'status_message' => $err
+                'status_message' => $err->getMessage()
             ], 200);
         }
     }

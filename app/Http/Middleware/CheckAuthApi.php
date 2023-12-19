@@ -24,6 +24,12 @@ class CheckAuthApi
                 ], 200);
             }
 
+            $request->merge([
+                'userId'    => $jwt->id,
+                'userEmail' => $jwt->email,
+                'userName'  => $jwt->name,
+            ]);
+
             return $next($request);
         } catch (Exception $err) {
             return response([

@@ -5,8 +5,9 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use Exception;
 use Firebase\JWT\JWT;
-use Illuminate\Foundation\Auth\User;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthApi extends Controller
@@ -28,21 +29,28 @@ class AuthApi extends Controller
                 ], 400);
             }
     
-            $user = User::where([
-                ['email', '=', $req->email],
-                ['password', '=', hash('sha256', md5($req->password))]
-            ])
-            ->select('id', 'email', 'name')
+            $user = User::where('email', $req->email)
+            ->select('id', 'email', 'name', 'password')
             ->first();
+            
+            if(!$user){
+                return response([
+                    'status_code'       => 200,
+                    'status_message'    => 'Data not found'
+                ]);
+            }
     
-            if($user == null){
+            if(!Hash::check($req->password, $user->password)){
                 return response([
                     'status_code'       => 200,
                     'status_message'    => 'Your email or password is incorrect'
                 ]);
             }
+
+            $user = $user->toArray();
+            unset($user['password']);
     
-            $jwt = JWT::encode($user->toArray(), env('JWT_SECRET_KEY'), env("JWT_ALGO"));
+            $jwt = JWT::encode($user, env('JWT_SECRET_KEY2'), env("JWT_ALGO2"));
             return response([
                 'status_code'    => 200,
                 'status_message' => 'Login successfuly',
@@ -51,7 +59,7 @@ class AuthApi extends Controller
         } catch (Exception $err) {
             return response([
                 'status_code'    => 500,
-                'status_message' => $err
+                'status_message' => $err->getMessage()
             ], 200);
         }
     }
