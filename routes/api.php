@@ -10,6 +10,7 @@ use App\Http\Controllers\api\v1\master\RoofApi;
 use App\Http\Controllers\api\v1\master\UserApi;
 use App\Http\Controllers\api\v1\master\WallApi;
 use App\Http\Controllers\api\v1\transaction\DashboardApi;
+use App\Http\Controllers\api\v1\transaction\SurveyAirBersihApi;
 use App\Http\Controllers\api\v1\transaction\UsulAladinApi;
 use App\Http\Controllers\api\v1\transaction\UsulListrikApi;
 use Illuminate\Http\Request;
@@ -92,6 +93,13 @@ Route::prefix('v1')->group(function () {
             ->controller(UsulListrikApi::class)->group(function () {
                 Route::get('/', 'index');
                 Route::get('latlong', 'getLatLong');
+                Route::post('/', 'store');
+            });
+        
+        // SURVEY AIR BERSIH
+        Route::prefix('surveyairbersih')
+            ->controller(SurveyAirBersihApi::class)->group(function () {
+                Route::get('/', 'index');
                 Route::post('/', 'store');
             });
 
