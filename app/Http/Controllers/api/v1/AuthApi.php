@@ -30,7 +30,7 @@ class AuthApi extends Controller
             }
     
             $user = User::where('email', $req->email)
-            ->select('id', 'email', 'name', 'password')
+            ->select('id', 'email', 'name', 'password', 'level_id', 'jobposition_id')
             ->first();
             
             if(!$user){
