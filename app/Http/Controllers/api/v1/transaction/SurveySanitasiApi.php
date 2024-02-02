@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -58,9 +59,14 @@ class SurveySanitasiApi extends Controller
                 'toiletstatus_id'   => 'required|integer',
                 'toilettype_id'     => 'required|integer',
                 'toilettpa_id'      => 'required|integer',
+                'longitude'         => 'required',
+                'latitude'          => 'required',
+                'image'             => 'required|mimes:jpg,bmp,png|max:500',
             ], [
                 'required'  => 'Paramater :attribute required',
-                'integer'   => 'Parameter :attribute must be integer'
+                'integer'   => 'Parameter :attribute must be integer',
+                'max'       => 'Parameter :attribute max 500Kb',
+                'mimes'     => 'Parameter :attribute must be JPG or BMP or PNG',
             ]);
 
             if ($validator->fails()) {
@@ -69,6 +75,12 @@ class SurveySanitasiApi extends Controller
                     'status_message' => $validator->errors()->first()
                 ], 200);
             }
+
+            $fileImage      = $req->file('image');
+            $extension      = $fileImage->extension();
+            $newFileName    = md5(Carbon::now()->format('YmdHis') . "image");
+            $upImage        = $fileImage->storeAs('public/survey-sanitasi', $newFileName . '.' . $extension);
+            $urlImage       = Storage::url($upImage);
             
             $user       = User::find($req->userId);
             $formData['uuid']               = (string) Str::uuid();
@@ -78,6 +90,9 @@ class SurveySanitasiApi extends Controller
             $formData['toiletstatus_id']    = $req->toiletstatus_id;
             $formData['toilettype_id']      = $req->toilettype_id;
             $formData['toilettpa_id']       = $req->toilettpa_id;
+            $formData['longitude']          = $req->longitude;
+            $formData['latitude']           = $req->latitude;
+            $formData['image']              = $urlImage;
             $formData['kelurahan_id']       = $user->kelurahan_id;
             $formData['kecamatan_id']       = $user->kecamatan_id;
             $formData['user_id']            = $req->userId;
