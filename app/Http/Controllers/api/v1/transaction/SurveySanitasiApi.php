@@ -61,7 +61,7 @@ class SurveySanitasiApi extends Controller
                 'toilettpa_id'      => 'required|integer',
                 'longitude'         => 'required',
                 'latitude'          => 'required',
-                'image'             => 'required|mimes:jpg,bmp,png|max:500',
+                'photo'             => 'required|mimes:jpg,bmp,png|max:500',
             ], [
                 'required'  => 'Paramater :attribute required',
                 'integer'   => 'Parameter :attribute must be integer',
@@ -76,11 +76,11 @@ class SurveySanitasiApi extends Controller
                 ], 200);
             }
 
-            $fileImage      = $req->file('image');
-            $extension      = $fileImage->extension();
-            $newFileName    = md5(Carbon::now()->format('YmdHis') . "image");
-            $upImage        = $fileImage->storeAs('public/survey-sanitasi', $newFileName . '.' . $extension);
-            $urlImage       = Storage::url($upImage);
+            $filePhoto      = $req->file('photo');
+            $extension      = $filePhoto->extension();
+            $newFileName    = md5(Carbon::now()->format('YmdHis') . "photo");
+            $upPhoto        = $filePhoto->storeAs('public/survey-sanitasi', $newFileName . '.' . $extension);
+            $urlPhoto       = Storage::url($upPhoto);
             
             $user       = User::find($req->userId);
             $formData['uuid']               = (string) Str::uuid();
@@ -92,7 +92,7 @@ class SurveySanitasiApi extends Controller
             $formData['toilettpa_id']       = $req->toilettpa_id;
             $formData['longitude']          = $req->longitude;
             $formData['latitude']           = $req->latitude;
-            $formData['image']              = $urlImage;
+            $formData['photo']              = $urlPhoto;
             $formData['kelurahan_id']       = $user->kelurahan_id;
             $formData['kecamatan_id']       = $user->kecamatan_id;
             $formData['user_id']            = $req->userId;
