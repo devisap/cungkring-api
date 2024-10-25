@@ -52,6 +52,15 @@ class SurveySanitasiApi extends Controller
     public function store(Request $req)
     {
         try {
+            $user = User::find($req->userId);
+            
+            if(!$user){
+                return response([
+                    'status_code' => 401,
+                    'status_message' => 'User not registered'
+                ], 200);
+            }
+            
             $validator = Validator::make($req->all(), [
                 'name'              => 'required',
                 'address2rt'        => 'required|integer',
@@ -82,7 +91,6 @@ class SurveySanitasiApi extends Controller
             $upPhoto        = $filePhoto->storeAs('public/survey-sanitasi', $newFileName . '.' . $extension);
             $urlPhoto       = Storage::url($upPhoto);
             
-            $user       = User::find($req->userId);
             $formData['uuid']               = (string) Str::uuid();
             $formData['name']               = $req->name;
             $formData['address2rt']         = $req->address2rt;

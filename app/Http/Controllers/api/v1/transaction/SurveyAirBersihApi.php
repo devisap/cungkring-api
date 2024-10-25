@@ -51,6 +51,16 @@ class SurveyAirBersihApi extends Controller
     public function store(Request $req)
     {
         try {
+
+            $user = User::find($req->userId);
+            
+            if(!$user){
+                return response([
+                    'status_code' => 401,
+                    'status_message' => 'User not registered'
+                ], 200);
+            }
+
             $validator = Validator::make($req->all(), [
                 'name'              => 'required',
                 'peopleusehippam'   => 'required|integer',
@@ -71,7 +81,6 @@ class SurveyAirBersihApi extends Controller
                 ], 200);
             }
             
-            $user       = User::find($req->userId);
             $formData['uuid']                       = (string) Str::uuid();
             $formData['name']                       = $req->name;
             $formData['peopleusehippam']            = $req->peopleusehippam;

@@ -73,6 +73,15 @@ class UsulListrikApi extends Controller
     public function store(Request $req)
     {
         try {
+            $user = User::find($req->userId);
+            
+            if(!$user){
+                return response([
+                    'status_code' => 401,
+                    'status_message' => 'User not registered'
+                ], 200);
+            }
+
             $validator = Validator::make($req->all(), [
                 'fisCalYear'        => 'required|integer',
                 'idCard'            => 'required',
@@ -137,7 +146,6 @@ class UsulListrikApi extends Controller
             $upCertificate      = $fileCertificate->storeAs('public/certificate-photo', $newFileName . '.' . $extension);
             $urlCertificate     = Storage::url($upCertificate);
 
-            $user       = User::find($req->userId);
             $formData['uuid']                       = (string) Str::uuid();;
             $formData['fiscalyear_proposed']        = $req->fisCalYear;
             $formData['idcard_number']              = $req->idCard;

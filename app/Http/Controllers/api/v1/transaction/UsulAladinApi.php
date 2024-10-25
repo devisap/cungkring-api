@@ -73,6 +73,15 @@ class UsulAladinApi extends Controller
     public function store(Request $req)
     {
         try {
+            $user = User::find($req->userId);
+            
+            if(!$user){
+                return response([
+                    'status_code' => 401,
+                    'status_message' => 'User not registered'
+                ], 200);
+            }
+
             $validator = Validator::make($req->all(), [
                 'fisCalYear'            => 'required|integer',
                 'idCard'                => 'required',
@@ -156,7 +165,6 @@ class UsulAladinApi extends Controller
             $upRTLH         = $fileRTLH->storeAs('public/rtlh-photo', $newFileName . '.' . $extension);
             $urlRTLH        = Storage::url($upRTLH);
 
-            $user       = User::find($req->userId);
             $formData['uuid']                       = (string) Str::uuid();
             $formData['fiscalyear_proposed']        = $req->fisCalYear;
             $formData['idcard_number']              = $req->idCard;
