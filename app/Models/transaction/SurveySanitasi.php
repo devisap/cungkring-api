@@ -18,6 +18,7 @@ class SurveySanitasi extends Model
         'longitude',
         'latitude',
         'image',
+        'nik',
         'address2rt',
         'address2rw',
         'toiletstatus_id',

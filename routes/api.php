@@ -115,6 +115,8 @@ Route::prefix('v1')->group(function () {
         ->controller(DashboardApi::class)->group(function () {
             Route::get('usulaladin', 'getUsulAladin');
             Route::get('usullistrik', 'getUsulListrik');
+            Route::get('surveyairbersih', 'getSurveyAirBersih');
+            Route::get('surveysanitasi', 'getSurveySanitasi');
         });
 
     // PROFILE API

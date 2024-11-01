@@ -63,6 +63,7 @@ class SurveySanitasiApi extends Controller
             
             $validator = Validator::make($req->all(), [
                 'name'              => 'required',
+                'nik'               => 'required',
                 'address2rt'        => 'required|integer',
                 'address2rw'        => 'required|integer',
                 'toiletstatus_id'   => 'required|integer',
@@ -92,6 +93,7 @@ class SurveySanitasiApi extends Controller
             $urlPhoto       = Storage::url($upPhoto);
             
             $formData['uuid']               = (string) Str::uuid();
+            $formData['nik']                = $req->nik;
             $formData['name']               = $req->name;
             $formData['address2rt']         = $req->address2rt;
             $formData['address2rw']         = $req->address2rw;
@@ -100,7 +102,7 @@ class SurveySanitasiApi extends Controller
             $formData['toilettpa_id']       = $req->toilettpa_id;
             $formData['longitude']          = $req->longitude;
             $formData['latitude']           = $req->latitude;
-            $formData['photo']              = $urlPhoto;
+            $formData['image']              = $urlPhoto;
             $formData['kelurahan_id']       = $user->kelurahan_id;
             $formData['kecamatan_id']       = $user->kecamatan_id;
             $formData['user_id']            = $req->userId;
